@@ -26,7 +26,7 @@
   transform: scale(1.03);
 }
 
-.gallery__image {
+.g   {
   height: 100%;
   width: 100%;
   object-fit: cover;
