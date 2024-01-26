@@ -16,5 +16,11 @@ const markup = galleryItems.map(image =>
 galleryContainer.insertAdjacentHTML("beforeend", markup);
 
 
-    let lightbox = new SimpleLightbox('.gallery a')
+let lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+    animationSpeed: 750,
+    enableKeyboard: true,
+    loop: true,
+});
     lightbox.on()
