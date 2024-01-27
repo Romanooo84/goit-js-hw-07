@@ -15,31 +15,39 @@ const markup = galleryItems.map(image =>
 	.join('');
 //tworzy elementy html wylistowane w markup
 gallery.insertAdjacentHTML("beforeend", markup);
-//sprawdza czy kliknieto w jakikolwiek element znajdujacy sie w ich przodku z klasą gallery 
-document.querySelector('.gallery').onclick = (event) => {
+
+//nasłuchowanie kliknięcia i wywołanie funkcji
+gallery.addEventListener("click", onGalleryClick)
+
+//utworzenie okna modalnego z wybranym ze zdjeciem
+const instance = basicLightbox.create(
+	`<img src="">`,
+	//opcje okna modalnego zgodnie z dokumentacją
+	{
+		onShow: () => window.addEventListener("keydown", onEscape),
+		onClose: () => window.removeEventListener("keydown", onEscape),
+	});
+
+
+function onGalleryClick(event) {
+	//zblokowanie zdarzeń
 	event.preventDefault()
-	//sprawdza jaki element został klikinięty
-	const imgElement = event.target;
-	//wyswietla alt tego elementu alt="${image.description}
-	const idElement = imgElement.alt;
-	//wybiera link do duzego zdjęcia z galerii dla wybranego id
-	const fidnLink = galleryItems.find(option => option.description === idElement).original;
-	//tworzenie okna modalnego z linkiem
-	const instance = basicLightbox.create(
-		`<img src="${fidnLink}">`)
-	// wyświetlenie okna modalnego
+	// wyszukiwanie źródła zdjęcia (liku)
+	const dataSource = event.target.dataset.source 
+
+	if (!dataSource) return;
+	//zwrócenie elementu instance, następnie wyszukanie w nim pierwszego elementu img i przypisanie do src w tym elemencie dataSource
+	instance.element().querySelector('img').src = dataSource;
+	//wyswietlenie instance (okna modalnego)
 	instance.show()
-	// nasłuchiwanie czy wcisniety jest przycisk esc i uruchomienie fukcji
-	window.addEventListener('keydown', onEscape)
-	// funckcja zamykająca okno modalne po wcisnięciu esc
-	function onEscape(event) {
-		if (event.key === 'Escape')
-			//zamykanie okna modalnego
-			instance.close()
-			//zakonczenie nasłuchiwania
-			window.removeEventListener('keydown', onEscape)
-		}
 }
+
+// funkcja reagująca na na wcisniecie przyscisku esc	
+function onEscape(event) {
+	if (event.key === "Escape") 
+        instance.close();
+}
+
 
 
 
